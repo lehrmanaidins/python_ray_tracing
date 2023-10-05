@@ -1,5 +1,5 @@
 """
-    Vector3 and Point3 Classes
+    Vector3, Point3, and Ray3 Classes
     @author Lehrman, Aidin
 """
 
@@ -37,6 +37,7 @@ class Vector3:
                 pass
         else:
             raise TypeError
+            
 
     def __str__(self) -> str:
         return f'[{self._x}, {self._y}, {self._z}]'
@@ -223,25 +224,58 @@ class Point3(Vector3):
         return f'({self._x}, {self._y}, {self._z})'
 
 
-def dot(a: Vector3, b: Vector3) -> float:
+def dot(vector1: Vector3, vector2: Vector3) -> float:
     """ Dot product of two Vector3's
     """
-    if not (isinstance(a, Vector3) or isinstance(b, Vector3)):
+    if not (isinstance(vector1, Vector3) or isinstance(vector2, Vector3)):
         raise TypeError
-    return (a._x * b._x) + (a._y * b._y) + (a._z * b._z)
+    return (vector1._x * vector2._x) + (vector1._y * vector2._y) + (vector1._z * vector2._z)
 
-def cross(a: Vector3, b: Vector3) -> Vector3:
+def cross(vector1: Vector3, vector2: Vector3) -> Vector3:
     """ Cross product of two Vector3's
     """
-    if not (isinstance(a, Vector3) or isinstance(b, Vector3)):
+    if not (isinstance(vector1, Vector3) or isinstance(vector2, Vector3)):
         raise TypeError
-    return Vector3(a._y * b._z - a._z * b._y,
-                   a._z * b._x - a._x * b._z,
-                   a._x * b._y - a._y * b._x)
+    return Vector3(vector1._y * vector2._z - vector1._z * vector2._y,
+                   vector1._z * vector2._x - vector1._x * vector2._z,
+                   vector1._x * vector2._y - vector1._y * vector2._x)
 
-def unit_vector(a: Vector3) -> Vector3:
+def unit_vector(vector: Vector3) -> Vector3:
     """ Returns Vector3 with same direction as argument Vector3, but with magnitude of 1
     """
-    if not isinstance(a, Vector3):
+    if not isinstance(vector, Vector3):
         raise TypeError
-    return a / a.length()
+    return vector / vector.length()
+
+
+class Ray3:
+    """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction
+    
+    Args:
+        origin (Point3): Origin point of the ray
+        direction (Vector3): Direction the ray is pointing towards
+
+    Returns:
+        3D Ray from Point3 'origin' in direction 'direction' with infinite magnitude
+    
+    """
+    def __init__(self, origin: Point3, direction: Vector3) -> None:
+        if not (isinstance(origin, Vector3) and isinstance(direction, Vector3)):
+            raise TypeError
+        self.origin = origin
+        self.direction = direction
+
+    def __str__(self) -> str:
+        return f'{str(self.origin)} -> {str(self.direction)}'
+
+    def point_at(self, distance: Union[int, float]) -> Point3:
+        """ Returns point that is on ray 't' distance from ray's origin
+        :t: Distance from origin
+        :t type: float or int
+        :returns: Point3 on ray 't' distnace from origin
+        :rtype: Point3
+        """
+        if not (isinstance(distance, float) or isinstance(distance, int)):
+            raise TypeError
+        return self.origin + (self.direction * distance)
+    
