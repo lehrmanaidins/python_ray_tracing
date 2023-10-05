@@ -1,12 +1,12 @@
 """
-    Color Class
+    Color
     @author Lehrman, Aidin
 """
 
 from math import floor
-import Vector3
+from environment_variables import Vector3
 
-class Color(Vector3.Vector3):
+class Color(Vector3):
     """ Color represented by Vector3 with '_r', '_g', and '_b' values from [0, 1]
     """
     def __str__(self) -> str:
