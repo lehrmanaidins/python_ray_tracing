@@ -11,9 +11,12 @@ class Vector3:
     """ Vector3 Class
     
     Args:
-        x, y, z (floats): 
+        x, y, z (floats): x, y, and z values of the Vector3 (Each entered as seperate argument)
             or
-        vector (Vector3):
+        vector (Vector3): Creates second Vector3 with same values as argument Vector3 (Only need 1 argument)
+
+    Returns:
+        
     """
     def __init__(self, *args: Union[int, float, Vector3]) -> None:
         if len(args) == 1:
