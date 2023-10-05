@@ -22,7 +22,7 @@ for j in range(image_height):
     for i in range(image_width):
         
         pixel_color = Color(i / (image_width - 1), j / (image_height - 1), 0)
-        image[i, j] = np.clip([pixel_color.x, pixel_color.y, pixel_color.z], 0, 1)
+        image[i, j] = np.clip(pixel_color.to_list(), 0, 1)
 
 
 plt.imsave('image.png', image)
