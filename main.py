@@ -16,15 +16,22 @@ IMAGE_WIDTH: int = 256 # Width of image
 image = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3))
 
 for j in range(IMAGE_HEIGHT): # For each row
+    # Calculates the amount of rows remaining
+    scanlines_remaining = IMAGE_HEIGHT - j
     
-    scanlines_remaining = IMAGE_HEIGHT - j # Calculates the amount of rows remaining
-    
+    # Progress
+    completed: int = j // 5
+    upcomming: int = (IMAGE_HEIGHT // 5) - completed
+
     # Prints progress bar and percent
-    print(f"\rScanlines Remaining:\t{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining}\t|{'#' * math.floor(j / 20)}{' ' * math.floor(scanlines_remaining / 20)}|\t{j / IMAGE_HEIGHT * 100:.2f}%", end='')
+    print(f"\rScanlines Remaining: {' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} |{'#' * completed}{' ' * upcomming}| {j / IMAGE_HEIGHT * 100:.2f}%\t", end='')
     
     for i in range(IMAGE_WIDTH): # For each pixel in each row
-        
-        pixel_color = Color(i / (IMAGE_WIDTH - 1), j / (IMAGE_HEIGHT - 1), 0) # Gets pixel colors based on pixel's (x, y) values
-        image[i, j] = np.clip(pixel_color.to_list(), 0, 1) # Sets pixel color to 'pixel_color'
+        # Gets pixel colors based on pixel's (x, y) values
+        pixel_color = Color(i / (IMAGE_WIDTH - 1), j / (IMAGE_HEIGHT - 1), 0)
+        # Sets pixel color to 'pixel_color'
+        image[i, j] = np.clip(pixel_color.to_list(), 0, 1)
 
+
+print(f"\rScanlines Remaining:   0 |{'#' * (IMAGE_HEIGHT // 5)}| 100.0%\t", end='')
 plt.imsave('image.png', image) # Saves image
