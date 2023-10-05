@@ -8,6 +8,13 @@ from typing import Union
 import math
 
 class Vector3:
+    """ Vector3 Class
+    
+    Args:
+        x, y, z (floats): 
+            or
+        vector (Vector3):
+    """
     def __init__(self, *args: Union[int, float, Vector3]) -> None:
         if len(args) == 1:
             try:
