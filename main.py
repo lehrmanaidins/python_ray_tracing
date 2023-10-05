@@ -1,13 +1,13 @@
 """
-    Image Class
+    Main
     @author Lehrman, Aidin
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 from colors import red, green, blue
-from Color import Color
-from Vector3 import Vector3, Point3
+from color import Color
+from environment_variables import Vector3, Point3
 
 # Image
 ASPECT_RATIO: float = 1 / 1
@@ -64,5 +64,5 @@ for j in range(IMAGE_HEIGHT):  # For each row
 print("\rScanlines Remaining: ", end='')
 print(blue("  0 "), end='')
 print(green(f"|{'#' * (IMAGE_HEIGHT // 5)}| "), end='')
-print(red("100.0%\t"), end='')
+print(red("100.0%\t"))
 plt.imsave('image.png', image)  # Saves image
