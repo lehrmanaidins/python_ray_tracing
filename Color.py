@@ -14,3 +14,4 @@ class Color(Vector3):
         g: int = min(max(math.floor(self.y * 255.999), 0), 255) # [0, 255]
         b: int = min(max(math.floor(self.z * 255.999), 0), 255) # [0, 255]
         return [r, g, b]
+
