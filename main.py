@@ -14,7 +14,7 @@ ASPECT_RATIO: float = 16 / 9
 IMAGE_WIDTH: int = 400 # Width of image
 
 # Calculate the image height, and ensure that it's at least 1.
-IMAGE_HEIGHT: int = IMAGE_WIDTH // ASPECT_RATIO
+IMAGE_HEIGHT: int = floor(IMAGE_WIDTH / ASPECT_RATIO)
 IMAGE_HEIGHT = 1 if IMAGE_HEIGHT < 1 else IMAGE_HEIGHT
 
 # Camera
@@ -36,7 +36,7 @@ VIEWPORT_UPPER_LEFT: Vector3 = CAMERA_CENTER - Vector3(0, 0, FOCAL_LENGTH) - (VI
 PIXEL00_LOCATION = VIEWPORT_UPPER_LEFT + ((PIXEL_DELTA_U + PIXEL_DELTA_V) * 0.5)
 
 # Creates 2D array of [r, g, b] colors with width 'image_width' and height 'image_height'
-image = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3))
+image = np.zeros((IMAGE_WIDTH, IMAGE_HEIGHT, 3))
 
 for j in range(IMAGE_HEIGHT): # For each row
     # Calculates the amount of rows remaining
@@ -54,6 +54,8 @@ for j in range(IMAGE_HEIGHT): # For each row
     
     for i in range(IMAGE_WIDTH): # For each pixel in each row
         # Gets pixel colors based on pixel's (x, y) values
+        
+        # Here
         pixel_color = Color(i / (IMAGE_WIDTH - 1), j / (IMAGE_HEIGHT - 1), 0)
         # Sets pixel color to 'pixel_color'
         image[i, j] = np.clip(pixel_color.to_list(), 0, 1)
