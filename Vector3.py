@@ -11,7 +11,7 @@ class Vector3:
     """ Vector3 Class
     
     Args:
-        x, y, z (floats): x, y, and z values of the Vector3 (Each entered as seperate argument)
+        _x, _y, _z (floats): _x, _y, and _z values of the Vector3 (Each entered as seperate argument)
             or
         vector (Vector3): Creates second Vector3 with same values as argument Vector3 (Only need 1 argument)
 
@@ -21,104 +21,104 @@ class Vector3:
     def __init__(self, *args: Union[int, float, Vector3]) -> None:
         if len(args) == 1:
             try:
-                self.x: float = args[0].x
-                self.y: float = args[0].y
-                self.z: float = args[0].z
+                self._x: float = args[0]._x
+                self._y: float = args[0]._y
+                self._z: float = args[0]._z
             except TypeError:
                 pass
         elif len(args) == 3:
             try:
-                self.x: float = args[0]
-                self.y: float = args[1]
-                self.z: float = args[2]
+                self._x: float = args[0]
+                self._y: float = args[1]
+                self._z: float = args[2]
             except TypeError:
                 pass
         else:
             raise TypeError
     
     def __str__(self) -> str:
-        return f'[{self.x}, {self.y}, {self.z}]'
+        return f'[{self._x}, {self._y}, {self._z}]'
         
     def __add__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            x: float = self.x + value
-            y: float = self.y + value
-            z: float = self.z + value
-            return Vector3(x, y, z)
+            _x: float = self._x + value
+            _y: float = self._y + value
+            _z: float = self._z + value
+            return Vector3(_x, _y, _z)
         elif isinstance(value, Vector3):
-            x: float = self.x + value.x
-            y: float = self.y + value.y
-            z: float = self.z + value.z
-            return Vector3(x, y, z)
+            _x: float = self._x + value._x
+            _y: float = self._y + value._y
+            _z: float = self._z + value._z
+            return Vector3(_x, _y, _z)
         else:
             raise TypeError
         
     def __iadd__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            self.x += value
-            self.y += value
-            self.z += value
+            self._x += value
+            self._y += value
+            self._z += value
             return self
         elif isinstance(value, Vector3):
-            self.x += value.x
-            self.y += value.y
-            self.z += value.z
+            self._x += value._x
+            self._y += value._y
+            self._z += value._z
             return self
         else:
             raise TypeError
         
     def __sub__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            x: float = self.x - value
-            y: float = self.y - value
-            z: float = self.z - value
-            return Vector3(x, y, z)
+            _x: float = self._x - value
+            _y: float = self._y - value
+            _z: float = self._z - value
+            return Vector3(_x, _y, _z)
         elif isinstance(value, Vector3):
-            x: float = self.x - value.x
-            y: float = self.y - value.y
-            z: float = self.z - value.z
-            return Vector3(x, y, z)
+            _x: float = self._x - value._x
+            _y: float = self._y - value._y
+            _z: float = self._z - value._z
+            return Vector3(_x, _y, _z)
         else:
             raise TypeError
         
     def __isub__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            self.x -= value
-            self.y -= value
-            self.z -= value
+            self._x -= value
+            self._y -= value
+            self._z -= value
             return self
         elif isinstance(value, Vector3):
-            self.x -= value.x
-            self.y -= value.y
-            self.z -= value.z
+            self._x -= value._x
+            self._y -= value._y
+            self._z -= value._z
             return self
         else:
             raise TypeError
         
     def __mul__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            x: float = self.x * value
-            y: float = self.y * value
-            z: float = self.z * value
-            return Vector3(x, y, z)
+            _x: float = self._x * value
+            _y: float = self._y * value
+            _z: float = self._z * value
+            return Vector3(_x, _y, _z)
         elif isinstance(value, Vector3):
-            x: float = self.x * value.x
-            y: float = self.y * value.y
-            z: float = self.z * value.z
-            return Vector3(x, y, z)
+            _x: float = self._x * value._x
+            _y: float = self._y * value._y
+            _z: float = self._z * value._z
+            return Vector3(_x, _y, _z)
         else:
             raise TypeError
         
     def __imul__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
-            self.x *= value
-            self.y *= value
-            self.z *= value
+            self._x *= value
+            self._y *= value
+            self._z *= value
             return self
         elif isinstance(value, Vector3):
-            self.x *= value.x
-            self.y *= value.y
-            self.z *= value.z
+            self._x *= value._x
+            self._y *= value._y
+            self._z *= value._z
             return self
         else:
             raise TypeError
@@ -126,18 +126,18 @@ class Vector3:
     def __truediv__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
             try:
-                x: float = self.x / value
-                y: float = self.y / value
-                z: float = self.z / value
-                return Vector3(x, y, z)
+                _x: float = self._x / value
+                _y: float = self._y / value
+                _z: float = self._z / value
+                return Vector3(_x, _y, _z)
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         elif isinstance(value, Vector3):
             try:
-                x: float = self.x / value.x
-                y: float = self.y / value.y
-                z: float = self.z / value.z
-                return Vector3(x, y, z)
+                _x: float = self._x / value._x
+                _y: float = self._y / value._y
+                _z: float = self._z / value._z
+                return Vector3(_x, _y, _z)
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         else:
@@ -146,17 +146,17 @@ class Vector3:
     def __itruediv__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
             try:
-                self.x /= value
-                self.y /= value
-                self.z /= value
+                self._x /= value
+                self._y /= value
+                self._z /= value
                 return self
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         elif isinstance(value, Vector3):
             try:
-                self.x /= value.x
-                self.y /= value.y
-                self.z /= value.z
+                self._x /= value._x
+                self._y /= value._y
+                self._z /= value._z
                 return self
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
@@ -166,18 +166,18 @@ class Vector3:
     def __floordiv__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
             try:
-                x: float = self.x // value
-                y: float = self.y // value
-                z: float = self.z // value
-                return Vector3(x, y, z)
+                _x: float = self._x // value
+                _y: float = self._y // value
+                _z: float = self._z // value
+                return Vector3(_x, _y, _z)
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         elif isinstance(value, Vector3):
             try:
-                x: float = self.x // value.x
-                y: float = self.y // value.y
-                z: float = self.z // value.z
-                return Vector3(x, y, z)
+                _x: float = self._x // value._x
+                _y: float = self._y // value._y
+                _z: float = self._z // value._z
+                return Vector3(_x, _y, _z)
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         else:
@@ -186,17 +186,17 @@ class Vector3:
     def __ifloordiv__(self, value: Union[int, float, Vector3]) -> Vector3:
         if isinstance(value, Union[int, float]):
             try:
-                self.x //= value
-                self.y //= value
-                self.z //= value
+                self._x //= value
+                self._y //= value
+                self._z //= value
                 return self
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
         elif isinstance(value, Vector3):
             try:
-                self.x //= value.x
-                self.y //= value.y
-                self.z //= value.z
+                self._x //= value._x
+                self._y //= value._y
+                self._z //= value._z
                 return self
             except ZeroDivisionError:
                 return Vector3(0, 0, 0)
@@ -204,7 +204,7 @@ class Vector3:
             raise TypeError
     
     def length_squared(self) -> float:
-        return (self.x ** 2) + (self.y ** 2) + (self.z ** 2)
+        return (self._x ** 2) + (self._y ** 2) + (self._z ** 2)
     
     def length(self) -> float:
         return math.sqrt(self.length_squared())
@@ -214,19 +214,19 @@ class Vector3:
 """
 class Point3(Vector3):
     def __str__(self) -> str:
-        return f'({self.x}, {self.y}, {self.z})'
+        return f'({self._x}, {self._y}, {self._z})'
 
     
 """
     Vector Utility Functions
 """
 def dot(a: Vector3, b: Vector3) -> float:
-    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z)
+    return (a._x * b._x) + (a._y * b._y) + (a._z * b._z)
 
 def cross(a: Vector3, b: Vector3) -> Vector3:
-    return Vector3(a.y * b.z - a.z * b.y,
-                   a.z * b.x - a.x * b.z,
-                   a.x * b.y - a.y * b.x)
+    return Vector3(a._y * b._z - a._z * b._y,
+                   a._z * b._x - a._x * b._z,
+                   a._x * b._y - a._y * b._x)
 
 def unit_vector(a: Vector3) -> Vector3:
     return a / a.length()
