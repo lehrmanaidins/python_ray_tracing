@@ -4,7 +4,8 @@
 
 """
 
-from Vector3 import *
+from typing import Union
+from Vector3 import Vector3, Point3
 
 class Ray3:
     """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction
@@ -26,7 +27,7 @@ class Ray3:
     def __str__(self) -> str:
         return f'{str(self.origin)} -> {str(self.direction)}'
     
-    def at(self, t: float) -> Point3:
+    def at(self, t: Union[int, float]) -> Point3:
         """ Returns point that is on ray 't' distance from ray's origin
         :t: Distance from origin
         :t type: float or int
