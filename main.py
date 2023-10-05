@@ -10,8 +10,30 @@ from Color import *
 from Vector3 import *
 
 # Image
-IMAGE_HEIGHT: int = 256 # Height of image
-IMAGE_WIDTH: int = 256 # Width of image
+ASPECT_RATIO: float = 16 / 9
+IMAGE_WIDTH: int = 400 # Width of image
+
+# Calculate the image height, and ensure that it's at least 1.
+IMAGE_HEIGHT: int = IMAGE_WIDTH // ASPECT_RATIO
+IMAGE_HEIGHT = 1 if IMAGE_HEIGHT < 1 else IMAGE_HEIGHT
+
+# Camera
+FOCAL_LENGTH: float = 1
+VIEWPORT_HEIGHT: float = 2
+VIEWPORT_WIDTH: float = VIEWPORT_HEIGHT * (IMAGE_WIDTH / IMAGE_HEIGHT)
+CAMERA_CENTER: Point3 = Point3(0, 0, 0)
+
+# Calculate the vectors across the horizontal and down the vertical viewport edges.
+VIEWPORT_U = Vector3(VIEWPORT_WIDTH, 0, 0)
+VIEWPORT_V = Vector3(0, -VIEWPORT_HEIGHT, 0)
+
+# Calculate the horizontal and vertical delta vectors from pixel to pixel.
+PIXEL_DELTA_U: Vector3 = VIEWPORT_U / IMAGE_WIDTH
+PIXEL_DELTA_V: Vector3 = VIEWPORT_V / IMAGE_HEIGHT
+
+# Calculate the location of the upper left pixel.
+VIEWPORT_UPPER_LEFT: Vector3 = CAMERA_CENTER - Vector3(0, 0, FOCAL_LENGTH) - (VIEWPORT_U / 2) - (VIEWPORT_V / 2)
+PIXEL00_LOCATION = VIEWPORT_UPPER_LEFT + ((PIXEL_DELTA_U + PIXEL_DELTA_V) * 0.5)
 
 # Creates 2D array of [r, g, b] colors with width 'image_width' and height 'image_height'
 image = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3))
