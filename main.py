@@ -6,10 +6,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from colors import red, green, blue
+import math
 from color import Color
 from environment_variables import *
+from hittable import HitRecord
+from hittable_list import HittableList
+from sphere import Sphere
 
-def ray_color(ray: Ray3):
+def ray_color(ray: Ray3, world: HittableList):
+    hit_record: HitRecord = HitRecord()
+    if world.hit(ray, 0, math.inf, hit_record):
+        return (hit_record.normal + Color(1, 1, 1)) / 2
+    
     unit_direction: Vector3 = unit_vector(ray.direction)
     a: float = (unit_direction._y + 1) / 2
     color: Color = (Color(1, 1, 1) * (1 - a)) + (Color(0.5, 0.7, 1.0) * a)
@@ -22,11 +30,17 @@ IMAGE_WIDTH: int = 400  # Width of image
 # Calculate the image height, and ensure that it's at least 1.
 IMAGE_HEIGHT: int = int(IMAGE_WIDTH // ASPECT_RATIO)
 IMAGE_HEIGHT = 1 if IMAGE_HEIGHT < 1 else IMAGE_HEIGHT
+
 # Camera
 FOCAL_LENGTH: float = 1.0
 VIEWPORT_HEIGHT: float = 2.0
 VIEWPORT_WIDTH: float = VIEWPORT_HEIGHT * (IMAGE_WIDTH / IMAGE_HEIGHT)
 CAMERA_CENTER: Point3 = Point3(0, 0, 0)
+
+# World
+world: HittableList = HittableList()
+world.add(Sphere(Point3(0, 0, -1), 0.5))
+world.add(Sphere(Point3(0, -100, -1), 100))
 
 # Calculate the vectors across the horizontal and down the vertical viewport edges.
 VIEWPORT_U = Vector3(VIEWPORT_WIDTH, 0, 0)
@@ -69,7 +83,7 @@ for j in range(IMAGE_HEIGHT):  # For each row
         ray_to_pixel: Ray3 = Ray3(CAMERA_CENTER, ray_direction)
         
         # Gets pixel colors based on pixel's (x, y) values
-        pixel_color = ray_color(ray_to_pixel)
+        pixel_color = ray_color(ray_to_pixel, world)
         
         # Sets pixel color to 'pixel_color'
         image[j, i] = np.clip(pixel_color.to_list(), 0, 1)

@@ -4,6 +4,7 @@
 """
 
 from __future__ import annotations
+from random import random, uniform
 from typing import Union
 import math
 
@@ -253,6 +254,11 @@ def unit_vector(vector: Vector3) -> Vector3:
         raise TypeError
     return vector / vector.length()
 
+def random_vector3() -> Vector3:
+    return Vector3(random(), random(), random())
+
+def random_vector3(min: float, max: float) -> Vector3:
+    return Vector3(uniform(min, max), uniform(min, max), uniform(min, max))
 
 class Ray3:
     """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction
