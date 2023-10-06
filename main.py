@@ -7,19 +7,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 from colors import red, green, blue
 from color import Color
-from environment_variables import Vector3, Point3, Ray3
+from environment_variables import *
+
+def ray_color(ray: Ray3):
+    unit_direction: Vector3 = unit_vector(ray.direction)
+    a: float = (unit_direction._y + 1) / 2
+    color: Color = (Color(1, 1, 1) * (1 - a)) + (Color(0.5, 0.7, 1.0) * a)
+    return color
 
 # Image
-ASPECT_RATIO: float = 1 / 1
-IMAGE_WIDTH: int = 256  # Width of image
+ASPECT_RATIO: float = 16 / 9
+IMAGE_WIDTH: int = 400  # Width of image
 
 # Calculate the image height, and ensure that it's at least 1.
 IMAGE_HEIGHT: int = int(IMAGE_WIDTH // ASPECT_RATIO)
 IMAGE_HEIGHT = 1 if IMAGE_HEIGHT < 1 else IMAGE_HEIGHT
-
 # Camera
-FOCAL_LENGTH: float = 1
-VIEWPORT_HEIGHT: float = 2
+FOCAL_LENGTH: float = 1.0
+VIEWPORT_HEIGHT: float = 2.0
 VIEWPORT_WIDTH: float = VIEWPORT_HEIGHT * (IMAGE_WIDTH / IMAGE_HEIGHT)
 CAMERA_CENTER: Point3 = Point3(0, 0, 0)
 
@@ -41,14 +46,12 @@ PIXEL00_LOCATION = VIEWPORT_UPPER_LEFT + \
 image = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3))
 
 for j in range(IMAGE_HEIGHT):  # For each row
-    # Calculates the amount of rows remaining
-    scanlines_remaining = IMAGE_HEIGHT - j
-
     # Progress
+    scanlines_remaining = IMAGE_HEIGHT - j
     completed: int = j // 5
     upcomming: int = (IMAGE_HEIGHT // 5) - completed
 
-    # Prints progress bar and percent
+    # Prints progress bar and percentage
     print("\rScanlines Remaining: ", end='')
     print(blue(
         f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} "), end='')
@@ -56,13 +59,24 @@ for j in range(IMAGE_HEIGHT):  # For each row
     print(red(f"{j / IMAGE_HEIGHT * 100:.2f}%\t"), end='')
 
     for i in range(IMAGE_WIDTH):  # For each pixel in each row
+        # Get Point3 for position of center of pixel
+        pixel_center: Point3 = PIXEL00_LOCATION + (PIXEL_DELTA_U * i) + (PIXEL_DELTA_V * j)
+        
+        # Get direction to pixel (Vector3)
+        ray_direction: Vector3 = pixel_center - CAMERA_CENTER
+        
+        # Get Ray3 from camera center towards pixel center
+        ray_to_pixel: Ray3 = Ray3(CAMERA_CENTER, ray_direction)
+        
         # Gets pixel colors based on pixel's (x, y) values
-        pixel_color = Color(i / (IMAGE_WIDTH - 1), j / (IMAGE_HEIGHT - 1), 0)
+        pixel_color = ray_color(ray_to_pixel)
+        
         # Sets pixel color to 'pixel_color'
-        image[i, j] = np.clip(pixel_color.to_list(), 0, 1)
+        image[j, i] = np.clip(pixel_color.to_list(), 0, 1)
 
 print("\rScanlines Remaining: ", end='')
 print(blue("  0 "), end='')
 print(green(f"|{'#' * (IMAGE_HEIGHT // 5)}| "), end='')
 print(red("100.0%\t"))
+
 plt.imsave('image.png', image)  # Saves image

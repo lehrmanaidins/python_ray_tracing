@@ -215,6 +215,12 @@ class Vector3:
         """ Retruns sqrt(length_squared)
         """
         return math.sqrt(self.length_squared())
+    
+    def to_list(self) -> list:
+        """ Returns Vector3 formated as list of length 3 with 
+            '_x' ([0]), '_y' ([1]), and '_z' ([2]) values scaled to [0, 1]
+        """
+        return [self._x, self._y, self._z]
 
 
 class Point3(Vector3):
