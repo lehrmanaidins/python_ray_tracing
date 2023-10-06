@@ -220,6 +220,9 @@ class Vector3:
     def negate(self) -> Vector3:
         return Vector3(-self._x, -self._y, -self._z)
     
+    def unit_vector(self, unit: float=1) -> Vector3:
+        return self / self.length() * unit
+    
     def to_list(self) -> list:
         """ Returns Vector3 formated as list of length 3 with 
             '_x' ([0]), '_y' ([1]), and '_z' ([2]) values scaled to [0, 1]
@@ -250,18 +253,19 @@ def cross(vector1: Vector3, vector2: Vector3) -> Vector3:
                    vector1._z * vector2._x - vector1._x * vector2._z,
                    vector1._x * vector2._y - vector1._y * vector2._x)
 
-def unit_vector(vector: Vector3) -> Vector3:
+def unit_vector(vector: Vector3, unit: float=1) -> Vector3:
     """ Returns Vector3 with same direction as argument Vector3, but with magnitude of 1
     """
     if not isinstance(vector, Vector3):
         raise TypeError
-    return vector / vector.length()
+    return vector / vector.length() * unit
 
 def random_vector3() -> Vector3:
     return Vector3(random(), random(), random())
 
 def random_vector3(min: float, max: float) -> Vector3:
     return Vector3(uniform(min, max), uniform(min, max), uniform(min, max))
+
 
 class Ray3:
     """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction
@@ -292,4 +296,4 @@ class Ray3:
         """
         if not (isinstance(distance, float) or isinstance(distance, int)):
             raise TypeError
-        return self.origin + (self.direction * distance)
+        return self.origin + (self.direction.unit_vector() * distance)

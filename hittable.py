@@ -6,13 +6,14 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from environment_variables import *
+from interval import Interval
 from color import Color
 
 class HitRecord:
     def __init__(self) -> None:
         self.point: Point3 = Point3(0, 0, 0)
         self.normal: Vector3 = Vector3(0, 0, 0)
-        self.t: float = 0
+        self.t: float = math.inf
         self.front_face: bool = False
         
     def copy(self, record: HitRecord) -> HitRecord:
@@ -34,6 +35,6 @@ class Hittable(ABC):
         pass
         
     @abstractmethod
-    def hit(ray: Ray3, rayt_min: float, rayt_max: float, record: HitRecord) -> bool:
+    def hit(self, ray: Ray3, ray_t: Interval, record: HitRecord) -> bool:
         print("Error: Abstract 'hit' function accessed.")
         return False

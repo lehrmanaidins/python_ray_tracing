@@ -12,10 +12,11 @@ from environment_variables import *
 from hittable import HitRecord
 from hittable_list import HittableList
 from sphere import Sphere
+from interval import Interval
 
 def ray_color(ray: Ray3, world: HittableList):
     hit_record: HitRecord = HitRecord()
-    if world.hit(ray, 0, math.inf, hit_record):
+    if world.hit(ray, Interval(0, math.inf), hit_record):
         color = (hit_record.normal + Color(1, 1, 1)) / 2
         return color
     
@@ -40,8 +41,8 @@ CAMERA_CENTER: Point3 = Point3(0, 0, 0)
 
 # World
 world: HittableList = HittableList()
-world.add(Sphere(Point3(0, 0, -1), 0.5))
-world.add(Sphere(Point3(0, -100, -1), 100))
+world.add(Sphere(Point3(0, 0, -1), 0.5)) # Foreground
+world.add(Sphere(Point3(0, -100, -1), 100)) # Background
 
 # Calculate the vectors across the horizontal and down the vertical viewport edges.
 VIEWPORT_U = Vector3(VIEWPORT_WIDTH, 0, 0)
@@ -70,7 +71,7 @@ for j in range(IMAGE_HEIGHT):  # For each row
     print("\rScanlines Remaining: ", end='')
     print(blue(
         f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} "), end='')
-    print(green(f"|{'#' * completed}{' ' * upcomming}| "), end='')
+    print(green(f"|{'■' * completed}{' ' * upcomming}| "), end='')
     print(red(f"{j / IMAGE_HEIGHT * 100:.2f}%\t"), end='')
 
     for i in range(IMAGE_WIDTH):  # For each pixel in each row
@@ -92,7 +93,7 @@ for j in range(IMAGE_HEIGHT):  # For each row
 # Print final progress bar
 print("\rScanlines Remaining: ", end='')
 print(blue("  0 "), end='')
-print(green(f"|{'#' * (IMAGE_HEIGHT // 5)}| "), end='')
+print(green(f"|{'■' * (IMAGE_HEIGHT // 5)}| "), end='')
 print(red("100.0%\t"))
 
 # Print message complete
