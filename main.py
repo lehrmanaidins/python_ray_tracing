@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from colors import red, green, blue
 from color import Color
-from environment_variables import Vector3, Point3
+from environment_variables import Vector3, Point3, Ray3
 
 # Image
 ASPECT_RATIO: float = 1 / 1
