@@ -4,6 +4,7 @@
 """
 
 from hittable import Hittable, HitRecord
+from typing import Union
 from environment_variables import Vector3, Point3, Ray3
 
 class HittableList(Hittable):
@@ -21,10 +22,10 @@ class HittableList(Hittable):
         hit_anything: bool = False
         closest_so_far: float = rayt_max
 
-        for object in self.objects:
-            if object.hit(ray, rayt_min, closest_so_far, temp_record):
+        for obj in self.objects:
+            if obj.hit(ray, rayt_min, closest_so_far, temp_record):
                 hit_anything = True
                 closest_so_far = temp_record.t
-                record = temp_record
+                record.copy(temp_record)  # Update the record parameter with temp_record
 
         return hit_anything

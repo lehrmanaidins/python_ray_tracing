@@ -16,7 +16,8 @@ from sphere import Sphere
 def ray_color(ray: Ray3, world: HittableList):
     hit_record: HitRecord = HitRecord()
     if world.hit(ray, 0, math.inf, hit_record):
-        return (hit_record.normal + Color(1, 1, 1)) / 2
+        color = (hit_record.normal + Color(1, 1, 1)) / 2
+        return color
     
     unit_direction: Vector3 = unit_vector(ray.direction)
     a: float = (unit_direction._y + 1) / 2
@@ -88,9 +89,13 @@ for j in range(IMAGE_HEIGHT):  # For each row
         # Sets pixel color to 'pixel_color'
         image[j, i] = np.clip(pixel_color.to_list(), 0, 1)
 
+# Print final progress bar
 print("\rScanlines Remaining: ", end='')
 print(blue("  0 "), end='')
 print(green(f"|{'#' * (IMAGE_HEIGHT // 5)}| "), end='')
 print(red("100.0%\t"))
+
+# Print message complete
+print(green("RAY TRACING: Complete"))
 
 plt.imsave('image.png', image)  # Saves image
