@@ -42,7 +42,7 @@ CAMERA_CENTER: Point3 = Point3(0, 0, 0)
 # World
 world: HittableList = HittableList()
 world.add(Sphere(Point3(0, 0, -1), 0.5)) # Foreground
-# world.add(Sphere(Point3(0, -100, -1), 100)) # Background
+world.add(Sphere(Point3(0, -100, -1), 100)) # Background
 
 # Calculate the vectors across the horizontal and down the vertical viewport edges.
 VIEWPORT_U = Vector3(VIEWPORT_WIDTH, 0, 0)
@@ -64,14 +64,14 @@ image = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3))
 for j in range(IMAGE_HEIGHT):  # For each row
     # Progress
     scanlines_remaining = IMAGE_HEIGHT - j
-    completed: int = j // 5
-    upcomming: int = (IMAGE_HEIGHT // 5) - completed
-
+    completed_percent: int = math.floor(j / IMAGE_HEIGHT * 50)
+    upcomming_percent: int = math.floor(50 - completed_percent)
+    
     # Prints progress bar and percentage
     print("\rScanlines Remaining: ", end='')
     print(blue(
         f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} "), end='')
-    print(green(f"|{'■' * completed}{' ' * upcomming}| "), end='')
+    print(green(f"|{'■' * completed_percent}{' ' * upcomming_percent}| "), end='')
     print(red(f"{j / IMAGE_HEIGHT * 100:.2f}%\t"), end='')
 
     for i in range(IMAGE_WIDTH):  # For each pixel in each row
@@ -93,7 +93,7 @@ for j in range(IMAGE_HEIGHT):  # For each row
 # Print final progress bar
 print("\rScanlines Remaining: ", end='')
 print(blue("  0 "), end='')
-print(green(f"|{'■' * (IMAGE_HEIGHT // 5)}| "), end='')
+print(green(f"|{'■' * 50}| "), end='')
 print(red("100.0%\t"))
 
 # Print message complete

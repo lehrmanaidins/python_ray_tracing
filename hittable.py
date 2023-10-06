@@ -14,20 +14,18 @@ class HitRecord:
         self.point: Point3 = Point3(0, 0, 0)
         self.normal: Vector3 = Vector3(0, 0, 0)
         self.t: float = math.inf
-        self.front_face: bool = False
         
     def copy(self, record: HitRecord) -> HitRecord:
         self.point = record.point
         self.normal = record.normal
         self.t = record.t
-        self.front_face = record.front_face
         return self
         
     def set_face_normal(self, ray: Ray3, outward_normal: Vector3) -> None:
-        self.front_face = dot(ray.direction, outward_normal) < 0
+        front_face = dot(ray.direction, outward_normal) < 0
         # Somthing is wrong with the way the code computes 'front_face'
         # Its prob back in the sphere class, maybe in .hit()
-        self.normal = outward_normal if self.front_face else outward_normal.negate()
+        self.normal = outward_normal if front_face else outward_normal.negate()
 
 class Hittable(ABC):
     @abstractmethod
