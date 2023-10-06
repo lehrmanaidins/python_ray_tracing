@@ -24,7 +24,9 @@ class HitRecord:
         
     def set_face_normal(self, ray: Ray3, outward_normal: Vector3) -> None:
         self.front_face = dot(ray.direction, outward_normal) < 0
-        self.normal: Vector3 = outward_normal if self.front_face else -outward_normal
+        # Somthing is wrong with the way the code computes 'front_face'
+        # Its prob back in the sphere class, maybe in .hit()
+        self.normal = outward_normal if self.front_face else outward_normal.negate()
 
 class Hittable(ABC):
     @abstractmethod

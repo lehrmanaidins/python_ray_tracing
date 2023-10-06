@@ -217,6 +217,9 @@ class Vector3:
         """
         return math.sqrt(self.length_squared())
     
+    def negate(self) -> Vector3:
+        return Vector3(-self._x, -self._y, -self._z)
+    
     def to_list(self) -> list:
         """ Returns Vector3 formated as list of length 3 with 
             '_x' ([0]), '_y' ([1]), and '_z' ([2]) values scaled to [0, 1]

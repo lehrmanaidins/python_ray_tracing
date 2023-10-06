@@ -13,19 +13,19 @@ class Sphere(Hittable):
         self.radius: float = radius
 
     def hit(self, ray: Ray3, rayt_min: float, rayt_max: float, record: HitRecord) -> bool:
-        oc: Point3 = ray.origin - self.position
+        oc: Vector3 = ray.origin - self.position
         a: float = ray.direction.length_squared()
         half_b: float = dot(oc, ray.direction)
-        c = oc.length_squared() - (self.radius ** 2)
+        c: float = oc.length_squared() - (self.radius * self.radius)
         
-        discriminant: float = (half_b ** 2) - (a * c)
+        discriminant: float = (half_b * half_b) - (a * c)
         if discriminant < 0:
             return False
         sqrt_discriminant: float = math.sqrt(discriminant)
         
         # Find nearest root that lies in the acceptable range
         root: float = (-half_b - sqrt_discriminant) / a
-        if (root <= rayt_min) or (rayt_max <= root):
+        if (rayt_min >= root) or (root <= rayt_max):
             root = (-half_b + sqrt_discriminant) / a
             if (root <= rayt_min ) or (rayt_max <= root):
                 return False
