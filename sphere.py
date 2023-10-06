@@ -25,9 +25,9 @@ class Sphere(Hittable):
         
         # Find nearest root that lies in the acceptable range
         root: float = (-half_b - sqrt_discriminant) / a
-        if (rayt_min >= root) or (root <= rayt_max):
+        if (root <= rayt_min or rayt_max <= root):
             root = (-half_b + sqrt_discriminant) / a
-            if (root <= rayt_min ) or (rayt_max <= root):
+            if (root <= rayt_min or rayt_max <= root):
                 return False
             
         record.t = root
