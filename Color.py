@@ -4,7 +4,7 @@
 """
 
 from __future__ import annotations
-from math import floor
+import math
 from interval import Interval
 from environment_variables import Vector3
 
@@ -18,8 +18,10 @@ class Color(Vector3):
         """ Returns Color formated as list of length 3 with 
             '_x' ([0]), '_y' ([1]), and '_z' ([2]) values scaled to [0, 255]
         """
-        _r: int = min(max(floor(self._x * 255), 0), 255) # [0, 255]
-        _g: int = min(max(floor(self._y * 255), 0), 255) # [0, 255]
-        _b: int = min(max(floor(self._z * 255), 0), 255) # [0, 255]
+        _r: int = min(max(math.floor(self._x * 255), 0), 255) # [0, 255]
+        _g: int = min(max(math.floor(self._y * 255), 0), 255) # [0, 255]
+        _b: int = min(max(math.floor(self._z * 255), 0), 255) # [0, 255]
         return [_r, _g, _b]
     
+def linear_to_gamma(linear_component: float) -> float:
+        return math.sqrt(linear_component)

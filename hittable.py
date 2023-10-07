@@ -8,11 +8,13 @@ from abc import ABC, abstractmethod
 from environment_variables import *
 from interval import Interval
 from color import Color
+from material import Material
 
 class HitRecord:
     def __init__(self) -> None:
         self.point: Point3 = Point3(0, 0, 0)
         self.normal: Vector3 = Vector3(0, 0, 0)
+        self.material = Material()
         self.t: float = math.inf
         
     def set_t(self, t: float) -> None:

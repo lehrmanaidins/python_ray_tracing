@@ -228,6 +228,10 @@ class Vector3:
             '_x' ([0]), '_y' ([1]), and '_z' ([2]) values scaled to [0, 1]
         """
         return [self._x, self._y, self._z]
+    
+    def is_near_zero(self) -> bool:
+        s: float = 1e-8
+        return (abs(self._x) < s) and (abs(self._y) < s) and (abs(self._z) < s)
 
 
 class Point3(Vector3):
@@ -281,6 +285,9 @@ def random_on_hemisphere(normal: Vector3) -> Vector3:
         return on_unit_sphere
     else:
         return on_unit_sphere * -1
+    
+def reflect(v: Vector3, n: Vector3) -> Vector3:
+    return v - (n * dot(v, n) * 2)
 
 
 class Ray3:

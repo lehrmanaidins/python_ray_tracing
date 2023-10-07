@@ -11,8 +11,8 @@ import random
 from colors import red, green, blue
 from hittable_list import HittableList
 from hittable import HitRecord
-from environment_variables import Vector3, Point3, Ray3, random_on_hemisphere
-from color import Color
+from environment_variables import Vector3, Point3, Ray3, random_unit_vector3
+from color import Color, linear_to_gamma
 from interval import Interval
 
 class Camera:
@@ -109,24 +109,33 @@ class Camera:
             return Color(0, 0, 0)
         
         if world.hit(ray, Interval(0.001, math.inf), hit_record):
-            direction: Vector3 = random_on_hemisphere(hit_record.normal)
-            return self.ray_color(Ray3(hit_record.point, direction), depth - 1, world) / 2
+            scattered: Ray3 = Ray3(Point3(0, 0, 0), Vector3(0, 0, 0))
+            attenuation: Color = Color(0, 0, 0)
+            if hit_record.material.scatter(ray, hit_record, attenuation, scattered):
+                return attenuation * self.ray_color(scattered, depth - 1, world)
 
         unit_direction: Vector3 = ray.direction.unit_vector()
         a: float = (unit_direction._y + 1) / 2
         color: Color = (Color(1, 1, 1) * (1 - a)) + (Color(0.5, 0.7, 1.0) * a)
         return color
     
+    
     def write_color(self, image: ndarray[float64], x: int, y: float, pixel_color: Color) -> None:
         r: float = pixel_color._x
         g: float = pixel_color._y
         b: float = pixel_color._z
         
+        # Divide the color by the number of samples.
         scale: float = 1 / self.samples_per_pixel
         r *= scale
         b *= scale
         g *= scale
         
-        intensity: Interval = Interval(0, 0.9999)
+        # Apply the linear to gamma transform.
+        r = linear_to_gamma(r)
+        g = linear_to_gamma(g)
+        b = linear_to_gamma(b)
+        
+        intensity: Interval = Interval(0, 0.999)
         color: Color = Color(intensity.clamp(r), intensity.clamp(g), intensity.clamp(b))
         image[y, x] = np.clip(color.to_list(), 0, 1)

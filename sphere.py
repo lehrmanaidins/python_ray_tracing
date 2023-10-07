@@ -7,11 +7,13 @@ import math
 from hittable import Hittable, HitRecord
 from environment_variables import Vector3, Point3, Ray3, dot
 from interval import Interval
+from material import Material
 
 class Sphere(Hittable):
-    def __init__(self, center: Point3, radius: float) -> None:
+    def __init__(self, center: Point3, radius: float, material: Material) -> None:
         self.center: Point3 = center
         self.radius: float = radius
+        self.material: Material = material
 
     def hit(self, ray: Ray3, ray_t: Interval, record: HitRecord) -> bool:
         oc: Vector3 = ray.origin - self.center
@@ -36,5 +38,6 @@ class Sphere(Hittable):
         record.set_point(ray.point_at(record.t))
         outward_normal: Vector3 = (record.point - self.center) / self.radius
         record.set_normal(ray, outward_normal)
+        record.material = self.material
         
         return True
