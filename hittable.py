@@ -15,13 +15,19 @@ class HitRecord:
         self.normal: Vector3 = Vector3(0, 0, 0)
         self.t: float = math.inf
         
+    def set_t(self, t: float) -> None:
+        self.t = t
+        
+    def set_point(self, point: Point3) -> None:
+        self.point = point
+
     def copy(self, record: HitRecord) -> HitRecord:
         self.point = record.point
         self.normal = record.normal
         self.t = record.t
         return self
         
-    def set_face_normal(self, ray: Ray3, outward_normal: Vector3) -> None:
+    def set_normal(self, ray: Ray3, outward_normal: Vector3) -> None:
         front_face = dot(ray.direction, outward_normal) < 0
         # Somthing is wrong with the way the code computes 'front_face'
         # Its prob back in the sphere class, maybe in .hit()

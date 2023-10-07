@@ -42,7 +42,7 @@ CAMERA_CENTER: Point3 = Point3(0, 0, 0)
 # World
 world: HittableList = HittableList()
 world.add(Sphere(Point3(0, 0, -1), 0.5)) # Foreground
-world.add(Sphere(Point3(0, -100, -1), 100)) # Background
+world.add(Sphere(Point3(0, -100.5, -1), 100)) # Background
 
 # Calculate the vectors across the horizontal and down the vertical viewport edges.
 VIEWPORT_U = Vector3(VIEWPORT_WIDTH, 0, 0)
