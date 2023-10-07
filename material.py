@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 from color import Color
-from environment_variables import Ray3, Vector3, random_unit_vector3, reflect, dot
+from environment_variables import Ray3, Vector3, random_unit_vector3, reflect, dot, unit_vector, refract
 
 class Material():
     def __init__(self, albedo: Color) -> None:
@@ -37,7 +37,6 @@ class Lambertian(Material):
 class Metal(Material):
     def __init__(self, albedo: Color, fuzz: float) -> None:
         self.albedo = albedo
-
         self.fuzz = fuzz if fuzz < 1 else 1
         
     def scatter(self, ray_in: Ray3, hit_record, attenuation: Color, scattered: Ray3) -> bool:
@@ -45,3 +44,17 @@ class Metal(Material):
         scattered.copy(Ray3(hit_record.point, reflected + (random_unit_vector3() * self.fuzz)))
         attenuation.copy(self.albedo)
         return (dot(scattered.direction, hit_record.normal) > 0)
+    
+class Dielectric(Material):
+    def __init__(self, index_of_refraction: float) -> None:
+        self.index_of_refraction = index_of_refraction
+        
+    def scatter(self, ray_in: Ray3, hit_record, attenuation: Color, scattered: Ray3) -> bool:
+        attenuation.copy(Color(1, 1, 1))
+        refraction_ratio: float = (1 / self.index_of_refraction) if hit_record.front_face else self.index_of_refraction
+        
+        unit_direction: Vector3 = unit_vector(ray_in.direction)
+        refracted: Vector3 = refract(unit_direction, hit_record.normal, refraction_ratio)
+        
+        scattered.copy(Ray3(hit_record.point, refracted))
+        return True

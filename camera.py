@@ -8,7 +8,7 @@ from numpy import float64, ndarray
 import matplotlib.pyplot as plt
 import math
 import random
-from colors import red, green, blue
+from colors import red, green, blue, yellow
 from hittable_list import HittableList
 from hittable import HitRecord
 from environment_variables import Vector3, Point3, Ray3, random_unit_vector3
@@ -23,11 +23,14 @@ class Camera:
     
     def render(self, world: HittableList) -> None:
         # Print message starting
-        print(green("RAY TRACING: Starting"))
+        print(green('\nmain.py: Starting ...\n'))
         
         # Creates 2D array of [r, g, b] colors with width 'image_width' and height 'image_height'
+        print(green('main.py: Creating Image ...'))
+        print(yellow(f'\tHeight: {self.image_height}px\n\tWidth:{self.image_width}px\n'))
         image = np.zeros((self.image_height, self.image_width, 3))
 
+        print(green('main.py: Rendering ...'))
         for j in range(self.image_height):  # For each row
             # Progress
             scanlines_remaining = self.image_height - j
@@ -35,7 +38,7 @@ class Camera:
             upcomming_percent: int = math.floor(50 - completed_percent)
 
             # Prints progress bar and percentage
-            print("\rScanlines Remaining: ", end='')
+            print(yellow('\r\tScanlines Remaining: '), end='')
             print(blue(f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} "), end='')
             print(green(f"|{'■' * completed_percent}{' ' * upcomming_percent}| "), end='')
             print(red(f"{j / self.image_height * 100:.2f}%\t"), end='')
@@ -48,13 +51,13 @@ class Camera:
                 self.write_color(image, i, j, pixel_color)
                 
         # Print final progress bar
-        print("\rScanlines Remaining: ", end='')
+        print(yellow('\r\tScanlines Remaining: '), end='')
         print(blue("  0 "), end='')
         print(green(f"|{'■' * 50}| "), end='')
         print(red("100.0%\t"))
 
         # Print message complete
-        print(green("RAY TRACING: Complete"))
+        print(green("\nmain.py: Render Complete\n"))
         
         plt.imsave('image.png', image)  # Saves image
 

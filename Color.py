@@ -17,7 +17,7 @@ class Color(Vector3):
     def copy(self, color: Color) -> Color:
         self._x = color._x
         self._y = color._y
-        self._z = color._y
+        self._z = color._z
         return self
 
     def to_rgb(self) -> list:

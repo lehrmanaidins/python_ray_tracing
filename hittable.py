@@ -8,13 +8,14 @@ from abc import ABC, abstractmethod
 from environment_variables import *
 from color import Color
 from interval import Interval
-import material
+from material import Material
 
 class HitRecord:
     def __init__(self) -> None:
         self.point: Point3 = Point3(0, 0, 0)
         self.normal: Vector3 = Vector3(0, 0, 0)
-        self.material = material.Material(Color(0, 0, 0))
+        self.material = Material(Color(0, 0, 0))
+        self.front_face = False
         self.t: float = math.inf
         
     def set_t(self, t: float) -> None:
@@ -31,12 +32,10 @@ class HitRecord:
         return self
         
     def set_normal(self, ray: Ray3, outward_normal: Vector3) -> None:
-        front_face = dot(ray.direction, outward_normal) < 0
-        # Somthing is wrong with the way the code computes 'front_face'
-        # Its prob back in the sphere class, maybe in .hit()
-        self.normal = outward_normal if front_face else outward_normal.negate()
+        self.front_face = dot(ray.direction, outward_normal) < 0
+        self.normal = outward_normal if self.front_face else outward_normal.negate()
         
-    def set_material(self, material: 'Material') -> 'Material':
+    def set_material(self, material: Material) -> Material:
         self.material = material
         return self.material
 

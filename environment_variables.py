@@ -289,6 +289,12 @@ def random_on_hemisphere(normal: Vector3) -> Vector3:
 def reflect(v: Vector3, n: Vector3) -> Vector3:
     return v - (n * dot(v, n) * 2)
 
+def refract(uv: Vector3, n: Vector3, etai_over_etat: float) -> Vector3:
+    cos_theta: float = min(dot(uv * -1, n), 1)
+    r_out_perp: Vector3 = (uv + (n * cos_theta)) * etai_over_etat
+    r_out_parallel: Vector3 = n * -math.sqrt(abs(1 - r_out_perp.length_squared()))
+    return r_out_perp + r_out_parallel
+
 
 class Ray3:
     """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction
