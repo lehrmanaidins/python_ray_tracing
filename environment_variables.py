@@ -266,6 +266,22 @@ def random_vector3() -> Vector3:
 def random_vector3(min: float, max: float) -> Vector3:
     return Vector3(uniform(min, max), uniform(min, max), uniform(min, max))
 
+def random_in_unit_sphere() -> Vector3:
+    while True:
+        p: Vector3 = random_vector3(-1, 1)
+        if p.length_squared() < 1:
+            return p
+        
+def random_unit_vector3() -> Vector3:
+    return unit_vector(random_in_unit_sphere())
+
+def random_on_hemisphere(normal: Vector3) -> Vector3:
+    on_unit_sphere: Vector3 = random_unit_vector3()
+    if dot(on_unit_sphere, normal) > 0:
+        return on_unit_sphere
+    else:
+        return on_unit_sphere * -1
+
 
 class Ray3:
     """ Ray3 is made up of two parts; a point in 3D space, and a vector in a direction

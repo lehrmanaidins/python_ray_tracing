@@ -3,7 +3,9 @@
     @author Lehrman, Aidin
 """
 
+from __future__ import annotations
 from math import floor
+from interval import Interval
 from environment_variables import Vector3
 
 class Color(Vector3):
@@ -20,3 +22,4 @@ class Color(Vector3):
         _g: int = min(max(floor(self._y * 255), 0), 255) # [0, 255]
         _b: int = min(max(floor(self._z * 255), 0), 255) # [0, 255]
         return [_r, _g, _b]
+    

@@ -4,12 +4,14 @@
 """
 
 import numpy as np
+from numpy import float64, ndarray
 import matplotlib.pyplot as plt
 import math
+import random
 from colors import red, green, blue
 from hittable_list import HittableList
 from hittable import HitRecord
-from environment_variables import Vector3, Point3, Ray3
+from environment_variables import Vector3, Point3, Ray3, random_on_hemisphere
 from color import Color
 from interval import Interval
 
@@ -17,12 +19,11 @@ class Camera:
     def __init__(self, aspect_ratio:float=1, image_width: int = 100) -> None:
         self.aspect_ratio: float = aspect_ratio
         self.image_width: int = image_width
+        self.initialize()
     
     def render(self, world: HittableList) -> None:
         # Print message starting
         print(green("RAY TRACING: Starting"))
-            
-        self.initialize()
         
         # Creates 2D array of [r, g, b] colors with width 'image_width' and height 'image_height'
         image = np.zeros((self.image_height, self.image_width, 3))
@@ -40,20 +41,11 @@ class Camera:
             print(red(f"{j / self.image_height * 100:.2f}%\t"), end='')
 
             for i in range(self.image_width):  # For each pixel in each row
-                # Get Point3 for position of center of pixel
-                pixel_center: Point3 = self.pixel00_location + (self.pixel_delta_u * i) + (self.viewport_v * j)
-
-                # Get direction to pixel (Vector3)
-                ray_direction: Vector3 = pixel_center - self.center
-
-                # Get Ray3 from camera center towards pixel center
-                ray_to_pixel: Ray3 = Ray3(self.center, ray_direction)
-
-                # Gets pixel colors based on pixel's (x, y) values
-                pixel_color = self.ray_color(ray_to_pixel, world)
-
-                # Sets pixel color to 'pixel_color'
-                image[j, i] = np.clip(pixel_color.to_list(), 0, 1)
+                pixel_color: Color = Color(0, 0, 0)
+                for sample in range(self.samples_per_pixel):
+                    ray: Ray3 = self.get_ray(i, j)
+                    pixel_color += self.ray_color(ray, self.max_depth, world)
+                self.write_color(image, i, j, pixel_color)
                 
         # Print final progress bar
         print("\rScanlines Remaining: ", end='')
@@ -72,33 +64,69 @@ class Camera:
         self.image_height = 1 if self.image_height < 1 else self.image_height
 
         self.center: Point3 = Point3(0, 0, 0)
+        self.samples_per_pixel: int = 10
+        self.max_depth = 50
         
         # Determine viewport dimensions
-        self.focal_length: float = 1.0
-        self.viewport_height: float = 2.0
-        self.viewport_width: float = self.viewport_height * (self.aspect_ratio / self.image_height)
+        focal_length: float = 1.0
+        viewport_height: float = 2.0
+        viewport_width: float = viewport_height * (self.image_width / self.image_height)
 
         # Calculate the vectors across the horizontal and down the vertical viewport edges.
-        self.viewport_u = Vector3(self.viewport_width, 0, 0)
-        self.viewport_v = Vector3(0, -self.viewport_height, 0)
+        viewport_u = Vector3(viewport_width, 0, 0)
+        viewport_v = Vector3(0, -viewport_height, 0)
 
         # Calculate the horizontal and vertical delta vectors from pixel to pixel.
-        self.pixel_delta_u: Vector3 = self.viewport_u / self.image_width
-        self.pixel_delta_v: Vector3 = self.viewport_v / self.image_height
+        self.pixel_delta_u: Vector3 = viewport_u / self.image_width
+        self.pixel_delta_v: Vector3 = viewport_v / self.image_height
 
         # Calculate the location of the upper left pixel.
-        self.viewport_upper_left: Vector3 = self.center - \
-            Vector3(0, 0, self.focal_length) - (self.viewport_u / 2) - (self.viewport_v / 2)
-        self.pixel00_location = self.viewport_upper_left + \
-            ((self.pixel_delta_u + self.pixel_delta_v) * 0.5)
+        viewport_upper_left: Vector3 = \
+            self.center - Vector3(0, 0, focal_length) - (viewport_u / 2) - (viewport_v / 2)
+        self.pixel00_location: Vector3 = \
+            viewport_upper_left + ((self.pixel_delta_u + self.pixel_delta_v) / 2)
             
-    def ray_color(self, ray: Ray3, world: HittableList):
+    def get_ray(self, i: int, j: int) -> Ray3:
+        # Get a randomly sampled camera ray for the pixel at location i,j.
+        pixel_center: Point3 = self.pixel00_location + (self.pixel_delta_u * i) + (self.pixel_delta_v * j)
+        pixel_sample: Point3 = pixel_center + self.pixel_sample_square()
+        
+        ray_origin: Point3 = self.center
+        ray_direction: Vector3 = pixel_sample - ray_origin
+        
+        return Ray3(ray_origin, ray_direction)
+    
+    def pixel_sample_square(self) -> Point3:
+        # Returns a random point in the square surrounding a pixel at the origin.
+        px: float = -0.5 + random.random()
+        py: float = -0.5 + random.random()
+        return (self.pixel_delta_u * px) + (self.pixel_delta_v * py)
+            
+    def ray_color(self, ray: Ray3, depth: int, world: HittableList):
         hit_record: HitRecord = HitRecord()
-        if world.hit(ray, Interval(0, math.inf), hit_record):
-            color = (hit_record.normal + Color(1, 1, 1)) / 2
-            return color
+        
+        if depth <= 0:
+            return Color(0, 0, 0)
+        
+        if world.hit(ray, Interval(0.001, math.inf), hit_record):
+            direction: Vector3 = random_on_hemisphere(hit_record.normal)
+            return self.ray_color(Ray3(hit_record.point, direction), depth - 1, world) / 2
 
         unit_direction: Vector3 = ray.direction.unit_vector()
         a: float = (unit_direction._y + 1) / 2
         color: Color = (Color(1, 1, 1) * (1 - a)) + (Color(0.5, 0.7, 1.0) * a)
         return color
+    
+    def write_color(self, image: ndarray[float64], x: int, y: float, pixel_color: Color) -> None:
+        r: float = pixel_color._x
+        g: float = pixel_color._y
+        b: float = pixel_color._z
+        
+        scale: float = 1 / self.samples_per_pixel
+        r *= scale
+        b *= scale
+        g *= scale
+        
+        intensity: Interval = Interval(0, 0.9999)
+        color: Color = Color(intensity.clamp(r), intensity.clamp(g), intensity.clamp(b))
+        image[y, x] = np.clip(color.to_list(), 0, 1)
