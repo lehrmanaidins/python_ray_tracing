@@ -38,6 +38,6 @@ class Sphere(Hittable):
         record.set_point(ray.point_at(record.t))
         outward_normal: Vector3 = (record.point - self.center) / self.radius
         record.set_normal(ray, outward_normal)
-        record.material = self.material
+        record.set_material(self.material)
         
         return True

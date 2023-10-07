@@ -13,6 +13,12 @@ class Color(Vector3):
     """
     def __str__(self) -> str:
         return f'{{{self._x}, {self._y}, {self._z}}}'
+    
+    def copy(self, color: Color) -> Color:
+        self._x = color._x
+        self._y = color._y
+        self._z = color._y
+        return self
 
     def to_rgb(self) -> list:
         """ Returns Color formated as list of length 3 with 

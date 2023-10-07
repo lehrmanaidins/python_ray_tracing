@@ -309,6 +309,11 @@ class Ray3:
 
     def __str__(self) -> str:
         return f'{str(self.origin)} -> {str(self.direction)}'
+    
+    def copy(self, ray: Ray3) -> Ray3:
+        self.origin = ray.origin
+        self.direction = ray.direction
+        return self
 
     def point_at(self, distance: Union[int, float]) -> Point3:
         """ Returns point that is on ray 't' distance from ray's origin
