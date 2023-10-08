@@ -10,6 +10,7 @@
 This is still very much a work in progress, but I am trying to recreate the code in "Ray Tracing in One Weekend" 100% in Python. 
 
 ### To-Do:
+> Chapters in "Ray Tracing In One Weekend":
 > - [x] Output an Image
 > - [x] The Vector3 Class
 > - [x] Rays, a Simple Camera, and Background
