@@ -14,6 +14,7 @@ from hittable import HitRecord
 from environment_variables import Vector3, Point3, Ray3, random_unit_vector3
 from color import Color, linear_to_gamma
 from interval import Interval
+from status import Status
 
 class Camera:
     def __init__(self, aspect_ratio:float=1, image_width: int = 100) -> None:
@@ -30,19 +31,12 @@ class Camera:
         print(yellow(f'\tHeight: {self.image_height}px\n\tWidth:{self.image_width}px\n'))
         image = np.zeros((self.image_height, self.image_width, 3))
 
+        status: Status = Status(self.image_width, self.image_height)
         print(green('main.py: Rendering ...'))
+        status.start()
+        
         for j in range(self.image_height):  # For each row
-            # Progress
-            scanlines_remaining = self.image_height - j
-            completed_percent: int = math.floor(j / self.image_height * 50)
-            upcomming_percent: int = math.floor(50 - completed_percent)
-
-            # Prints progress bar and percentage
-            print(yellow('\r\tScanlines Remaining: '), end='')
-            print(blue(f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining} "), end='')
-            print(green(f"|{'■' * completed_percent}{' ' * upcomming_percent}| "), end='')
-            print(red(f"{j / self.image_height * 100:.2f}%\t"), end='')
-
+            row_start_time: float = status.get_time()
             for i in range(self.image_width):  # For each pixel in each row
                 pixel_color: Color = Color(0, 0, 0)
                 for sample in range(self.samples_per_pixel):
@@ -50,11 +44,11 @@ class Camera:
                     pixel_color += self.ray_color(ray, self.max_depth, world)
                 self.write_color(image, i, j, pixel_color)
                 
-        # Print final progress bar
-        print(yellow('\r\tScanlines Remaining: '), end='')
-        print(blue("  0 "), end='')
-        print(green(f"|{'■' * 50}| "), end='')
-        print(red("100.0%\t"))
+            row_end_time: float = status.get_time()
+            status.set_rolling_average(row_end_time - row_start_time)
+            status.print_status(j)
+            
+        status.print_status(self.image_height)
 
         # Print message complete
         print(green("\nmain.py: Render Complete\n"))
@@ -112,8 +106,8 @@ class Camera:
             return Color(0, 0, 0)
         
         if world.hit(ray, Interval(0.001, math.inf), hit_record):
-            scattered: Ray3 = Ray3(Point3(0, 0, 0), Vector3(0, 0, 0))
-            attenuation: Color = Color(0, 0, 0)
+            scattered: Ray3 = Ray3()
+            attenuation: Color = Color()
             if hit_record.material.scatter(ray, hit_record, attenuation, scattered):
                 return attenuation * self.ray_color(scattered, depth - 1, world)
 

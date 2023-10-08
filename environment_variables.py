@@ -36,6 +36,10 @@ class Vector3:
                 self._z: float = args[2]
             except TypeError:
                 pass
+        elif len(args) == 0:
+            self._x: float = 0
+            self._y: float = 0
+            self._z: float = 0
         else:
             raise TypeError
             
@@ -210,7 +214,7 @@ class Vector3:
     def length_squared(self) -> float:
         """ Calculates sq(length) of Vector3
         """
-        return (self._x ** 2) + (self._y ** 2) + (self._z ** 2)
+        return (self._x * self._x) + (self._y * self._y) + (self._z * self._z)
 
     def length(self) -> float:
         """ Retruns sqrt(length_squared)
@@ -264,10 +268,7 @@ def unit_vector(vector: Vector3, unit: float=1) -> Vector3:
         raise TypeError
     return vector / vector.length() * unit
 
-def random_vector3() -> Vector3:
-    return Vector3(random(), random(), random())
-
-def random_vector3(min: float, max: float) -> Vector3:
+def random_vector3(min: float=0, max: float=1) -> Vector3:
     return Vector3(uniform(min, max), uniform(min, max), uniform(min, max))
 
 def random_in_unit_sphere() -> Vector3:
@@ -307,9 +308,9 @@ class Ray3:
         3D Ray from Point3 'origin' in direction 'direction' with infinite magnitude
     
     """
-    def __init__(self, origin: Point3, direction: Vector3) -> None:
+    def __init__(self, origin: Point3=Point3(), direction: Vector3=Vector3()) -> None:
         if not (isinstance(origin, Vector3) and isinstance(direction, Vector3)):
-            raise TypeError
+            raise TypeError("Wrong inputed value type.")
         self.origin = origin
         self.direction = direction
 
