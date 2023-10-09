@@ -22,7 +22,7 @@ class Camera:
         self.image_width: int = image_width
         self.initialize()
     
-    def render(self, world: HittableList) -> None:
+    def render(self, world: HittableList, save_to_file: str='image.png') -> None:
         # Print message starting
         print(green('\nmain.py: Starting ...\n'))
         
@@ -34,6 +34,7 @@ class Camera:
         status: Status = Status(self.image_width, self.image_height)
         print(green('main.py: Rendering ...'))
         status.start()
+        status.print_status(0)
         
         for j in range(self.image_height):  # For each row
             row_start_time: float = status.get_time()
@@ -53,7 +54,7 @@ class Camera:
         # Print message complete
         print(green("\nmain.py: Render Complete\n"))
         
-        plt.imsave('image.png', image)  # Saves image
+        plt.imsave(save_to_file, image)  # Saves image
 
     def initialize(self) -> None:
         # Calculate the image height, and ensure that it's at least 1.
