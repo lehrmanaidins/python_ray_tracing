@@ -23,9 +23,9 @@ world.add(Sphere(Point3(0, 0, -1), 0.5, material_center))
 # world.add(Sphere(Point3(1, 0, -1), 0.5, material_right))
 
 aspect_ratio: float = 16 / 9
-image_width: int = int(1080)
+image_width: int = int(100)
 camera: Camera = Camera(aspect_ratio, image_width)
 camera.samples_per_pixel = 100
 camera.max_depth = 50
 
-camera.render(world, 'render_2560px1440p_100_samples_per_pixel.png')
+camera.render(world)

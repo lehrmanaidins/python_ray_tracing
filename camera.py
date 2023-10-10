@@ -28,7 +28,7 @@ class Camera:
         
         # Creates 2D array of [r, g, b] colors with width 'image_width' and height 'image_height'
         print(green('main.py: Creating Image ...'))
-        print(yellow(f'\tHeight: {self.image_height}px\n\tWidth:{self.image_width}px\n'))
+        print(yellow(f'\tHeight: {self.image_height}px\n\tWidth: {self.image_width}px\n'))
         image = np.zeros((self.image_height, self.image_width, 3))
 
         status: Status = Status(self.image_width, self.image_height)

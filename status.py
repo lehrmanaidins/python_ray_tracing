@@ -43,6 +43,6 @@ class Status:
             # Prints progress bar and percentage
             print(yellow('\r\tScanlines Remaining: '), end='')
             print(blue(f"{' ' * ( 3 - len(str(scanlines_remaining)))}{scanlines_remaining}\t"), end='')
-            print(green(f"|{'■' * completed_percent}{' ' * upcomming_percent}| "), end='')
+            print(green(f"[{'■' * completed_percent}{' ' * upcomming_percent}] "), end='')
             print(red(f"{j / self.image_height * 100:.2f}%\t"), end='')
             print(blue(f'Average Time per Row: {self.average_time_per_row:.3f} seconds\tEstimated Time Left: {self.calculate_estimated_time_left(j):.3f} seconds\t\t\t\t\t'), end='')
