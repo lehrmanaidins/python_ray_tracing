@@ -24,3 +24,6 @@ This is still very much a work in progress, but I am trying to recreate the code
 > - [ ] Positionable Camera
 > - [ ] Defocus Blur
 > - [ ] Where Next?
+
+### Why I Stopped
+I have came to the conclusion that Python is definitely not the right language to write a ray-tracer in. It is way too slow, and I have started learning C++. Will remake this in C++ to make this exponentially faster.
